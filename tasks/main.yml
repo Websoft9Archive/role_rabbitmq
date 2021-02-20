@@ -1,4 +1,37 @@
-- name: Install this role on {{ansible_os_family}}
+
+# Install RabbitMQ
+- name: Install RabbitMQ on {{ansible_os_family}}
   include: "{{ansible_os_family}}.yml"
 
+# Set RabbitMQ
 
+- name: Restart RabbitMQ
+  shell: systemctl start rabbitmq-server
+
+- name: Enable the management console of RabbitMQ
+  shell: sudo rabbitmq-plugins enable rabbitmq_management
+
+- name: Create administrator for RabbitMQ console
+  shell: |
+    sudo rabbitmqctl add_user admin admin
+    sudo rabbitmqctl set_user_tags admin administrator
+
+- name: Debug users
+  shell: sudo rabbitmqctl list_users
+  register: rabbimq_show_users
+
+- debug: msg="{{rabbimq_show_users}}"
+
+- name: Restart RabbitMQ Server
+  service:
+    name: rabbitmq-server
+    state: restarted
+    enabled: yes
+  
+- block:
+  - name: Check RabbitMQ Version
+    shell: sudo sh -c "rabbitmqctl status | grep 'RabbitMQ version' 1>> /data/logs/install_version.txt"
+
+  - name: Check Erlang Version
+    shell: sudo sh -c 'echo "Erlang $(yum info erlang | grep Version | sed -n 1p)" 1>> /data/logs/install_version.txt'
+    when: ansible_os_family=="RedHat"

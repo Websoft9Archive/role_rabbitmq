@@ -1,0 +1,13 @@
+- name: Install and set Erlang and RabbitMQ repo for {{ansible_os_family}} OS family
+  shell: |
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
+    curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
+
+- name: Yum Install Erlang and RabbitMQ 
+  shell: yum install erlang rabbitmq-server -y
+
+- name: Add soft link 
+  shell: |
+    ln -sf /usr/lib/rabbitmq /data
+    ln -sf /var/log/rabbitmq /data/logs
+    ln -sf /usr/lib64/erlang /data
