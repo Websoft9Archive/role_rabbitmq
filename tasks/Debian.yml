@@ -19,10 +19,10 @@
     - "erlang=1:{{rabbitmq_erlang_major_version}}.*"
     - "rabbitmq-server={{rabbitmq_version}}.*"
 
-- name: Copy  Erlang and RabbitMQ version pinning file
+- name: Copy Erlang and RabbitMQ version pinning file
   template:
-    src: '{{imte.src}}'
-    dest: '{{imte.dest}}'
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
   with_items:
     - {src: "erlang_pinn",dest: "/etc/apt/preferences.d/erlang"}
     - {src: "rabbitmq_pinn",dest: "/etc/apt/preferences.d/rabbitmq"}

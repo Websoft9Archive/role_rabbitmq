@@ -1,5 +1,5 @@
 - set_fact:
-    rabbitmq_erlang_major_version: "{{rabbitmq_version_meta[ansible_os_family].[rabbitmq_version]"
+    rabbitmq_erlang_major_version: "{{rabbitmq_version_meta[ansible_os_family][rabbitmq_version]}}"
     
 # Install RabbitMQ
 - name: Install RabbitMQ on {{ansible_os_family}}
