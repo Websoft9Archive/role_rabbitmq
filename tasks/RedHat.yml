@@ -12,7 +12,7 @@
     name: "{{item}}"
   with_items:
     - "erlang{{rabbitmq_erlang_major_version}}.*"
-    - "rabbitmq-server{{rabbitmq_version}}.*"
+    - "rabbitmq-server-{{rabbitmq_version}}.*"
 
 - name: Lock Erlang and rabbitmq version
   shell: | 

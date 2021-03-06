@@ -53,7 +53,7 @@
     notify: check_rabbitmq_service
 
   - name: Check RabbitMQ Version
-    shell: sudo echo "erlang version:" $(rabbitmq-diagnostics version) |sudo tee -a /data/logs/install_version.txt
+    shell: sudo echo "rabbitmq version:" $(rabbitmqctl status |grep \"RabbitMQ\" |cut -d'"' -f4) |sudo tee -a /data/logs/install_version.txt
 
   - name: Check Erlang Version
     shell: sudo echo "erlang version:" $(cat /usr/*/erlang/releases/*/OTP_VERSION) |sudo tee -a /data/logs/install_version.txt
