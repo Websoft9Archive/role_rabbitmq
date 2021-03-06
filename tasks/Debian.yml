@@ -12,12 +12,18 @@
     - deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
     - deb https://dl.bintray.com/rabbitmq/debian bionic main
 
-- name: Install RabbitMQ
+- name: Install RabbitMQ and Erlang
   apt:
-    name: rabbitmq-server
+    name: "{{item}}"
+  with_items:
+    - "erlang=1:{{rabbitmq_erlang_major_version}}.*"
+    - "rabbitmq-server={{rabbitmq_version}}.*"
 
-- name: Add soft link 
-  shell: |
-    ln -sf /usr/lib/rabbitmq /data
-    ln -sf /var/log/rabbitmq /data/logs
-    ln -sf /usr/lib/erlang /data
+- name: Copy  Erlang and RabbitMQ version pinning file
+  template:
+    src: '{{imte.src}}'
+    dest: '{{imte.dest}}'
+  with_items:
+    - {src: "erlang_pinn",dest: "/etc/apt/preferences.d/erlang"}
+    - {src: "rabbitmq_pinn",dest: "/etc/apt/preferences.d/rabbitmq"}
+    

@@ -3,11 +3,19 @@
     curl -s https://packagecloud.io/install/repositories/rabbitmq/erlang/script.rpm.sh | sudo bash
     curl -s https://packagecloud.io/install/repositories/rabbitmq/rabbitmq-server/script.rpm.sh | sudo bash
 
-- name: Yum Install Erlang and RabbitMQ 
-  shell: yum install erlang rabbitmq-server -y
+- name: Install versionlock
+  yum:
+    name: yum-plugin-versionlock
 
-- name: Add soft link 
-  shell: |
-    ln -sf /usr/lib/rabbitmq /data
-    ln -sf /var/log/rabbitmq /data/logs
-    ln -sf /usr/lib64/erlang /data
+- name:  Install Erlang and RabbitMQ 
+  yum:
+    name: "{{item}}"
+  with_items:
+    - "erlang{{rabbitmq_erlang_major_version}}.*"
+    - "rabbitmq-server{{rabbitmq_version}}.*"
+
+- name: Lock Erlang and rabbitmq version
+  shell: | 
+    yum versionlock erlang
+    yum versionlock rabbitmq-server
+

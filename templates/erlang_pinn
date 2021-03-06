@@ -1,0 +1,4 @@
+Package: erlang*
+Pin: release o=Bintray
+Pin: version 1:{{rabbitmq_erlang_major_version}}.*
+Pin-Priority: 1000

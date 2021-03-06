@@ -1,0 +1,4 @@
+Package: rabbitmq-server
+Pin: release o=Bintray
+Pin: version 1:{{rabbitmq_version}}.*
+Pin-Priority: 1000

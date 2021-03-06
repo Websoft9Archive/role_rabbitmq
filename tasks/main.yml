@@ -1,4 +1,6 @@
-
+- set_fact:
+    rabbitmq_erlang_major_version: "{{rabbitmq_version_meta[ansible_os_family].[rabbitmq_version]"
+    
 # Install RabbitMQ
 - name: Install RabbitMQ on {{ansible_os_family}}
   include: "{{ansible_os_family}}.yml"
@@ -28,10 +30,30 @@
     state: restarted
     enabled: yes
   
+- name: Set soft link 
+  file:
+    src: '{{item.src}}'
+    dest: '{{item.dest}}'
+    state: link
+    force: yes
+  with_items:
+    - {src: /usr/lib/rabbitmq/ ,dest: /data/rabbitmq}
+    - {src: /var/log/rabbitmq/,dest: /data/logs/rabbitmq}
+    - {src: /var/log/rabbitmq/,dest: /data/rabbitmq/logs}
+    - {src: /usr/lib/erlang/,dest: /data/erlang} 
+    - {src: /etc/rabbitmq/,dest: /data/config/rabbitmq}
+    - {src: /etc/rabbitmq/,dest: /data/rabbitmq/config}
+    - {src: /lib/systemd/system/rabbitmq-server.service,dest:  /lib/systemd/system/rabbitmq.service}
+   
+# check service and version
 - block:
+  - name: Check RabbitMQ Service
+    shell: systemctl status rabbitmq-server | grep Active*
+    register: check_rabbitmq_service
+    notify: check_rabbitmq_service
+
   - name: Check RabbitMQ Version
-    shell: sudo sh -c "rabbitmqctl status | grep 'RabbitMQ version' 1>> /data/logs/install_version.txt"
+    shell: sudo echo "erlang version:" $(rabbitmq-diagnostics version) |sudo tee -a /data/logs/install_version.txt
 
   - name: Check Erlang Version
-    shell: sudo sh -c 'echo "Erlang $(yum info erlang | grep Version | sed -n 1p)" 1>> /data/logs/install_version.txt'
-    when: ansible_os_family=="RedHat"
+    shell: sudo echo "erlang version:" $(cat /usr/*/erlang/releases/*/OTP_VERSION) |sudo tee -a /data/logs/install_version.txt
