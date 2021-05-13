@@ -1,16 +1,21 @@
-# Must use the dl.bintray.com to instead the packagecloud.io because there no https://packagecloud.io/rabbitmq/erlang/ubuntu
+- name: Install APT packages that allow HTTPS connections
+  apt:
+    name: apt-transport-https 
+
 - name: add a key used to sign RabbitMQ
   apt_key:
-    url: https://github.com/rabbitmq/signing-keys/releases/download/2.0/rabbitmq-release-signing-key.asc
+    url: https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
 
 - name: add the apt repository
   apt_repository:
     repo: "{{item}}"
     state: present
-    filename: bintray.rabbitmq
+    filename: rabbitmq
   with_items:
-    - deb https://dl.bintray.com/rabbitmq-erlang/debian bionic erlang
-    - deb https://dl.bintray.com/rabbitmq/debian bionic main
+    - deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu {{ansible_distribution_release}} main
+    - deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu {{ansible_distribution_release}} main
+    - deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ {{ansible_distribution_release}} main
+    - deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ {{ansible_distribution_release}} main
 
 - name: Install RabbitMQ and Erlang
   apt:
