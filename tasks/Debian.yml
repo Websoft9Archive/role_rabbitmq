@@ -2,6 +2,11 @@
   apt:
     name: apt-transport-https 
 
+- name: add key for RabbitMQ Erlang
+  shell: |
+    apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
+    apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
+
 - name: add a key used to sign RabbitMQ
   apt_key:
     url: https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
