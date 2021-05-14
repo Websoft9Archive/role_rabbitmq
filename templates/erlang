@@ -1,4 +1,8 @@
 Package: erlang*
+Pin: origin dl.cloudsmith.io
+Pin-Priority: 1000
+
+Package: erlang*
 Pin: release o=Bintray
 Pin: version 1:{{rabbitmq_erlang_major_version}}.*
 Pin-Priority: 1000

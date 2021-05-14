@@ -1,4 +1,8 @@
 Package: rabbitmq-server
+Pin: origin packagecloud.io
+Pin-Priority: 1000
+
+Package: rabbitmq-server
 Pin: release o=Bintray
 Pin: version 1:{{rabbitmq_version}}.*
 Pin-Priority: 1000

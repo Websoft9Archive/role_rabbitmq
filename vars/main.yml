@@ -1,5 +1,6 @@
 ---
 # e.g rabbitmq3.6.x  erlang18.x
+# dl.cloudsmith.io is no 3.7 package available
 rabbitmq_version_meta:
   RedHat:
     "rabbitmq": "erlang"
@@ -9,4 +10,4 @@ rabbitmq_version_meta:
   Debian:
     "3.6":      "16"
     "3.7":      "22"
-    "3.8":      "23"
+    "3.8":      "24"
