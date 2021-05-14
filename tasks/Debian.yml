@@ -4,12 +4,9 @@
 
 - name: add key for RabbitMQ Erlang
   shell: |
-    apt-key adv --keyserver "keyserver.ubuntu.com" --recv-keys "F77F1EDA57EBB1CC"
-    apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-
-- name: add a key used to sign RabbitMQ
-  apt_key:
-    url: https://packagecloud.io/rabbitmq/rabbitmq-server/gpgkey
+    - sudo apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
+    - curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key | sudo apt-key add -
+    - curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key | sudo apt-key add -
 
 - name: add the apt repository
   apt_repository:
@@ -17,23 +14,23 @@
     state: present
     filename: rabbitmq
   with_items:
-    - deb http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu {{ansible_distribution_release}} main
-    - deb-src http://ppa.launchpad.net/rabbitmq/rabbitmq-erlang/ubuntu {{ansible_distribution_release}} main
-    - deb https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ {{ansible_distribution_release}} main
-    - deb-src https://packagecloud.io/rabbitmq/rabbitmq-server/ubuntu/ {{ansible_distribution_release}} main
+    - deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/ubuntu {{ansible_distribution_release}} main
+    - deb-src https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/deb/ubuntu {{ansible_distribution_release}} main
+    - deb https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu {{ansible_distribution_release}} main
+    - deb-src https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/deb/ubuntu {{ansible_distribution_release}} main 
 
-- name: Install RabbitMQ and Erlang
-  apt:
-    name: "{{item}}"
-  with_items:
-    - "erlang=1:{{rabbitmq_erlang_major_version}}.*"
-    - "rabbitmq-server={{rabbitmq_version}}.*"
-
-- name: Copy Erlang and RabbitMQ version pinning file
+- name: Copy Erlang and RabbitMQ pinn file
   template:
     src: '{{item.src}}'
     dest: '{{item.dest}}'
   with_items:
-    - {src: "erlang_pinn",dest: "/etc/apt/preferences.d/erlang"}
-    - {src: "rabbitmq_pinn",dest: "/etc/apt/preferences.d/rabbitmq"}
-    
+    - {src: "erlang",dest: "/etc/apt/preferences.d/erlang"}
+    - {src: "rabbitmq",dest: "/etc/apt/preferences.d/rabbitmq"}
+
+- name: Install RabbitMQ and Erlang
+  apt:
+    name: "{{item}}"
+    update_cache: yes
+  with_items:
+    - "erlang=1:{{rabbitmq_erlang_major_version}}.*"
+    - "rabbitmq-server={{rabbitmq_version}}.*"
