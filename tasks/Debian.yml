@@ -1,12 +1,18 @@
 - name: Install APT packages that allow HTTPS connections
   apt:
     name: apt-transport-https 
+    
+- name: Add an apt key by id from a keyserver
+  apt_key:
+    keyserver: "hkps://keys.openpgp.org"
+    id: "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
 
-- name: add key for RabbitMQ Erlang
-  shell: |
-    - sudo apt-key adv --keyserver "hkps://keys.openpgp.org" --recv-keys "0x0A9AF2115F4687BD29803A206B73A36E6026DFCA"
-    - curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key | sudo apt-key add -
-    - curl -1sLf https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key | sudo apt-key add -
+- name: add a key used to sign RabbitMQ
+  apt_key:
+    url: "{{item}}"
+  with_items:
+    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-erlang/gpg.E495BB49CC4BBE5B.key
+    - https://dl.cloudsmith.io/public/rabbitmq/rabbitmq-server/gpg.9F4587F226208342.key
 
 - name: add the apt repository
   apt_repository:
